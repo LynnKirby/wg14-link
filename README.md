@@ -15,8 +15,11 @@ checked by a GitHub actions workflow to notify us of any changes.
 All documents are listed in `data/documents.yml`. Aliases (like `c99`) are
 listed in `data/alias.yml`. These files get parsed at build time by
 `scripts/make-redirect-data.js` to generate a 170 KB JSON data file that our
-redirection endpoint (`api/redirect.js`) consumes. Yes, there is probably a
-better way to store the runtime data.
+Express application (`app.js`) consumes.
+
+### Infrastructure
+
+Hosted on Heroku with DNS and caching by Cloudflare.
 
 ## License
 
