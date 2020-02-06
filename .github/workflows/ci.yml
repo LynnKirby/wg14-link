@@ -1,0 +1,11 @@
+name: Continuous Integration
+on: [push, pull_request]
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: npm ci
+    - run: npm run build -s
+    - run: npm run test -s
