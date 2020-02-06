@@ -39,6 +39,10 @@ expect.extend({
   },
 });
 
+//
+// Utilities.
+//
+
 const dataFileCache = {};
 
 const readDataFile = dataPath => {
@@ -69,6 +73,10 @@ const itShouldValidateAgainstSchema = (dataPath, schemaPath) => {
   });
 };
 
+//
+// Tests.
+//
+
 describe("build/redirect.json", () => {
   itShouldValidateAgainstSchema("build/redirect.json", "schema/redirect.json");
 });
@@ -87,5 +95,21 @@ describe("data/alias.yml", () => {
 });
 
 describe("data/documents.yml", () => {
+  const docs = readDataFile("data/documents.yml");
+
   itShouldValidateAgainstSchema("data/documents.yml", "schema/documents.json");
+
+  it("has unique IDs", () => {
+    const seen = new Set();
+    const duplicates = new Set();
+
+    for (let { id } of docs) {
+      if (seen.has(id)) {
+        duplicates.add(id);
+      }
+      seen.add(id);
+    }
+
+    expect(Array.from(duplicates)).toEqual([]);
+  });
 });
