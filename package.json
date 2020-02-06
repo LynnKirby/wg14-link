@@ -3,11 +3,19 @@
   "name": "wg14-link",
   "version": "0.1.0",
   "scripts": {
-    "start": "now dev",
-    "now-build": "node scripts/make-redirect-data.js"
+    "start": "cross-env DEBUG=wg14-link:* node scripts/start-server.js",
+    "build": "node scripts/make-redirect-data.js"
   },
   "devDependencies": {
     "js-yaml": "^3.13.1",
-    "now": "^16.7.3"
+    "prettier": "^1.19.1"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.0",
+    "debug": "^4.1.1",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "http-errors": "^1.7.3",
+    "morgan": "^1.9.1"
   }
 }

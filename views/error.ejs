@@ -3,18 +3,16 @@
 
 <head>
   <meta charset="utf-8">
-  <title>document file missing | wg14.link</title>
+  <title><%= message %> | wg14.link</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/main.css">
 </head>
 
 <body>
   <h1>wg14.link</h1>
-  <p>error 404 - document file missing</p>
-  <p>
-    the document ID you provided is valid but we do not have a link to the
-    document file. it has probably been lost to the sands of time...
-  </p>
+  <p>error <%= status %> - <%= message %></p>
+  <% if (description) { %><p><%= description %></p><% } %>
+  <% if (stack) { %><pre><%= stack %></pre><% } %>
   <p><a href="/">return to index</a></p>
 </body>
 

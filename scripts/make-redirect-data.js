@@ -33,14 +33,9 @@ for (let { id, url, status } of docs) {
   }
 
   // Figure out the URL and action based on the document status.
-  if (status === "missing") {
-    // Document file is missing (probably forever).
-    redirect.error = true;
-    redirect.url = "/404-missing.html";
-  } else if (status === "unassigned") {
-    // ID is unassigned.
-    redirect.error = true;
-    redirect.url = "/404-unassigned.html";
+  if (status === "missing" || status === "unassigned") {
+    // Document file is missing or is unassigned.
+    redirect.status = status;
   } else {
     // Document file is found.
     assert((status === "found") || (status === "protected"));
@@ -63,6 +58,6 @@ for (let [from, to] of Object.entries(alias)) {
 }
 
 // Write the redirect file.
-fs.mkdirSync("build");
+fs.mkdirSync("build", { recursive: true });
 fs.writeFileSync("build/redirect.json", JSON.stringify(redirects));
 console.log("build/redirect.json has been written");
