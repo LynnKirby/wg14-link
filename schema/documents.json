@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://wg14.link/schema/documents.json",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^N[0-9]{3,4}$"
+      },
+      "title": { "type": "string" },
+      "author": {
+        "oneOf": [
+          { "type": "string" },
+          { "type": "array", "items": { "type": "string" }}
+        ]
+      },
+      "date": {
+        "type": "string",
+        "pattern": "^[0-9]{4}-[0-9]{2}(-[0-9]{2})?$"
+      },
+      "url": { "type": "string", "format": "uri" }
+    },
+    "required": ["id"],
+    "oneOf": [
+      {
+        "required": ["title", "author", "date", "url"],
+        "properties": {
+          "status": { "type": "string", "pattern": "^protected$" }
+        }
+      },
+      {
+        "required": ["title", "author", "date", "status"],
+        "properties": {
+          "status": { "type": "string", "pattern": "^missing$" }
+        }
+      },
+      {
+        "required": ["status"],
+        "properties": {
+          "status": { "type": "string", "pattern": "^unassigned$" }
+        }
+      }
+    ]
+  }
+}

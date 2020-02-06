@@ -4,11 +4,15 @@
   "version": "0.1.0",
   "scripts": {
     "start": "cross-env DEBUG=wg14-link:* node scripts/start-server.js",
-    "build": "node scripts/make-redirect-data.js"
+    "build": "node scripts/make-redirect-data.js",
+    "test": "jest"
   },
   "devDependencies": {
-    "js-yaml": "^3.13.1",
-    "prettier": "^1.19.1"
+    "ajv": "^6.11.0",
+    "jest": "^25.1.0",
+    "jest-json-schema": "^2.1.0",
+    "prettier": "^1.19.1",
+    "yaml": "^1.7.2"
   },
   "dependencies": {
     "cross-env": "^7.0.0",

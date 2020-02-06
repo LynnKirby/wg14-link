@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://wg14.link/schema/alias.json",
+  "type": "object",
+  "additionalProperties": {
+    "type": "string",
+    "pattern": "^[a-zA-Z0-9]+$"
+  },
+  "propertyNames": {
+    "pattern": "^[a-zA-Z0-9]+$"
+  }
+}

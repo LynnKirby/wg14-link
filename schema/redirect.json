@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://wg14.link/schema/redirect.json",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "oneOf": [
+      {
+        "properties": {
+          "status": { "type": "string", "enum": ["unassigned", "missing"] }
+        },
+        "additionalProperties": false,
+        "required": ["status"]
+      },
+      {
+        "properties": {
+          "url": { "type": "string", "format": "uri" }
+        },
+        "additionalProperties": false,
+        "required": ["url"]
+      }
+    ]
+  },
+  "propertyNames": {
+    "pattern": "^[a-zA-Z0-9]+$"
+  }
+}
