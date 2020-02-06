@@ -16,19 +16,19 @@ jobs:
       uses: actions/checkout@v2
     - if: github.repository == "LynnKirby/wg14-link"
       run: |
-      cat >~/.netrc <<EOF
-      machine git.heroku.com
-        login ${{ secrets.HEROKU_EMAIL }}
-        password ${{ secrets.HEROKU_API_KEY }}
-      EOF
+        cat >~/.netrc <<EOF
+        machine git.heroku.com
+          login ${{ secrets.HEROKU_EMAIL }}
+          password ${{ secrets.HEROKU_API_KEY }}
+        EOF
 
-      if [[ "${{ github.ref }}" == "master" ]]; then
-        git remote add heroku https://git.heroku.com/wg14-link.git
-      elif [[ "${{ github.ref }}" == "staging" ]]; then
-        git remote add heroku https://git.heroku.com/wg14-link-staging.git
-      else
-        echo "Deploy script running on incorrect branch!"
-        exit 1
-      fi
+        if [[ "${{ github.ref }}" == "master" ]]; then
+          git remote add heroku https://git.heroku.com/wg14-link.git
+        elif [[ "${{ github.ref }}" == "staging" ]]; then
+          git remote add heroku https://git.heroku.com/wg14-link-staging.git
+        else
+          echo "Deploy script running on incorrect branch!"
+          exit 1
+        fi
 
-      git push heroku ${{ github.ref }}:master -f
+        git push heroku ${{ github.ref }}:master -f
