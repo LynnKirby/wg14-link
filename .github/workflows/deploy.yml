@@ -1,0 +1,34 @@
+# This workflow is used instead of the Heroku GitHub app because the app wants
+# complete repository permissions for all repos in the connected account. That's
+# bad for security. This script requires storing a Heroku API key for my account
+# as GitHub secret but I'd prefer GitHub somehow messing up my hobbyist sites on
+# Heroku compared to Heroku somehow messing up my GitHub repositories.
+name: Deploy to Heroku
+on:
+  push:
+    branches: ["master", "staging"]
+jobs:
+  deploy:
+    name: Deploy to Heroku
+    runs-on: ubuntu-latest
+    steps:
+    - if: github.repository == "LynnKirby/wg14-link"
+      uses: actions/checkout@v2
+    - if: github.repository == "LynnKirby/wg14-link"
+      run: |
+      cat >~/.netrc <<EOF
+      machine git.heroku.com
+        login ${{ secrets.HEROKU_EMAIL }}
+        password ${{ secrets.HEROKU_API_KEY }}
+      EOF
+
+      if [[ "${{ github.ref }}" == "master" ]]; then
+        git remote add heroku https://git.heroku.com/wg14-link.git
+      elif [[ "${{ github.ref }}" == "staging" ]]; then
+        git remote add heroku https://git.heroku.com/wg14-link-staging.git
+      else
+        echo "Deploy script running on incorrect branch!"
+        exit 1
+      fi
+
+      git push heroku ${{ github.ref }}:master -f
