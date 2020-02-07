@@ -179,7 +179,7 @@ app.use((err, req, res, next) => {
     case "json":
       renderJsonError(err, res);
       break;
-    case "bibtex":
+    case "bib":
       renderPlainTextError(err, res);
       break;
     default:

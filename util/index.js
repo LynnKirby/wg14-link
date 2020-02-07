@@ -38,3 +38,43 @@ module.exports.parseDataFileSync = filename => {
 
   throw new Error(`Unknown data file type of ${filename}.`);
 };
+
+// Parses the author format in data/authors.yml.
+module.exports.parseAuthor = raw => {
+  const segments = raw.split("||");
+  assert(segments.length === 1 || segments.length === 2);
+
+  if (segments.length === 1) {
+    return { literal: raw.trim() };
+  }
+
+  if (segments[1] === "") {
+    return { family: segments[0].trim() };
+  }
+
+  return { family: segments[0].trim(), given: segments[1].trim() };
+};
+
+const dateRegexp = /^([0-9]{4})(-[0-9]{2})?(-[0-9]{2})?$/;
+
+// Parses a date (YYYY-MM-DD) which may be a string or a number.
+module.exports.parseDate = obj => {
+  // If the YAML data file has just the year, it gets parsed as a number.
+  if (typeof obj === "number") {
+    return { year: obj };
+  }
+
+  assert(typeof obj === "string");
+  const match = obj.match(dateRegexp);
+  const date = { year: Number.parseInt(match[1], 10) };
+
+  if (match[2]) {
+    date.month = Number.parseInt(match[2].substring(1), 10);
+  }
+
+  if (match[3]) {
+    date.day = Number.parseInt(match[3].substring(1), 10);
+  }
+
+  return date;
+};

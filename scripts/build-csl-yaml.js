@@ -1,72 +1,46 @@
 const assert = require("assert");
-const { canonicalDocumentId, parseDataFileSync } = require("../util");
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
 const yaml = require("yaml");
 
+const {
+  canonicalDocumentId,
+  parseDataFileSync,
+  parseAuthor,
+  parseDate,
+} = require("../util");
+
 // Make things easy by always operating from the project root directory.
 process.chdir(path.join(__dirname, "../"));
 
-fs.mkdirSync("build/public", { recursive: true });
-
-const rawAuthors = parseDataFileSync("data/authors.yml");
-const docs = parseDataFileSync("data/documents.yml");
-
-// Parse author file into CSL JSON.
-const authorMap = {};
-
-const parseAuthor = raw => {
-  const segments = raw.split("||");
-  assert(segments.length === 1 || segments.length === 2);
-
-  // Institution.
-  if (segments.length === 1) {
-    return { literal: raw.trim() };
-  }
-
-  // Unknown given name.
-  if (segments[1] === "") {
-    return { family: segments[0].trim() };
-  }
-
-  // Full name.
-  return { family: segments[0].trim(), given: segments[1].trim() };
-};
-
-for (let id of Object.keys(rawAuthors)) {
-  authorMap[id] = parseAuthor(rawAuthors[id]);
-}
-
+// Converts an object into a YAML flow-style map.
 const makeFlowObject = obj => {
   const node = yaml.createNode(obj);
   node.type = "FLOW_MAP";
   return node;
 };
 
-// Parse a string or number into a CSL date-parts object.
-const dateRegexp = /^([0-9]{4})(-[0-9]{2})?(-[0-9]{2})?$/;
-
-const parseDate = obj => {
-  // If the YAML data file has just the year, it gets parsed as a number.
-  if (typeof obj === "number") {
-    return makeFlowObject({ "date-parts": [[obj]] });
-  }
-
-  assert(typeof obj === "string");
-  const match = obj.match(dateRegexp);
-  const parts = [Number.parseInt(match[1], 10)];
-
-  if (match[2]) {
-    parts.push(Number.parseInt(match[2].substring(1), 10));
-  }
-
-  if (match[3]) {
-    parts.push(Number.parseInt(match[3].substring(1), 10));
-  }
-
+// Convert a year number or YYYY-MM-DD string to CSL JSON date-parts.
+const parseDateAsCsl = date => {
+  const { year, month, day } = parseDate(date);
+  const parts = [year];
+  if (month !== undefined) parts.push(month);
+  if (day !== undefined) parts.push(day);
   return makeFlowObject({ "date-parts": [parts] });
 };
+
+// Prepare data.
+fs.mkdirSync("build/public", { recursive: true });
+const rawAuthors = parseDataFileSync("data/authors.yml");
+const docs = parseDataFileSync("data/documents.yml");
+
+// Parse author file into CSL JSON.
+const authorMap = {};
+
+for (let id of Object.keys(rawAuthors)) {
+  authorMap[id] = parseAuthor(rawAuthors[id]);
+}
 
 const references = [];
 
@@ -78,7 +52,7 @@ for (const doc of docs) {
 
   // Fields that all citations have.
   const id = canonicalDocumentId(doc.id);
-  const issued = doc.issued ? parseDate(doc.issued) : parseDate(doc.date);
+  const issued = parseDateAsCsl(doc.issued ? doc.issued : doc.date);
 
   const cite = {
     id,
