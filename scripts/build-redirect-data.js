@@ -1,26 +1,14 @@
 const assert = require("assert");
+const { canonicalDocumentId, parseDataFileSync } = require("../util");
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
-const yaml = require("yaml");
 
 // Make things easy by always operating from the project root directory.
 process.chdir(path.join(__dirname, "../"));
 
-const readData = filename => {
-  const file = fs.readFileSync(filename, { encoding: "utf8" });
-  return yaml.parse(file, { schema: "failsafe" });
-};
-
-const docs = readData("data/documents.yml");
-const alias = readData("data/alias.yml");
-
-// Canonicalize document ID to n# without leading zeroes.
-const canonicalDocumentId = id => {
-  assert(id.match("^N[0-9]+$"));
-  const n = Number.parseInt(id.substr(1), 10);
-  return "n" + n;
-};
+const docs = parseDataFileSync("data/documents.yml");
+const alias = parseDataFileSync("data/alias.yml");
 
 const redirects = {};
 

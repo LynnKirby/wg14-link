@@ -1,5 +1,5 @@
-const fs = require("fs");
-const yaml = require("yaml");
+const { parseDataFileSync } = require("../util");
+const path = require("path");
 
 //
 // Matchers
@@ -49,18 +49,8 @@ const readDataFile = dataPath => {
   const cached = dataFileCache[dataPath];
   if (cached !== undefined) return cached;
 
-  let data;
-  const relDataPath = `../${dataPath}`;
-
-  if (dataPath.endsWith(".yml")) {
-    const file = fs.readFileSync(require.resolve(relDataPath), {
-      encoding: "utf8",
-    });
-    data = yaml.parse(file, { schema: "failsafe" });
-  } else {
-    data = require(relDataPath);
-  }
-
+  const relDataPath = path.join(__dirname, "../", dataPath);
+  const data = parseDataFileSync(relDataPath);
   dataFileCache[dataPath] = data;
   return data;
 };

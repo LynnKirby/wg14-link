@@ -5,7 +5,7 @@
   "scripts": {
     "start": "cross-env DEBUG=wg14-link:* node scripts/start-server.js",
     "dev": "cross-env NODE_ENV=development npm start",
-    "build": "node scripts/make-redirect-data.js",
+    "build": "node scripts/build-all.js",
     "test": "jest"
   },
   "devDependencies": {
