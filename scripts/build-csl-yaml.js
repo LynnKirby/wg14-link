@@ -1,4 +1,3 @@
-const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
@@ -6,6 +5,7 @@ const yaml = require("yaml");
 
 const {
   canonicalDocumentId,
+  extractDocumentNumber,
   parseDataFileSync,
   parseAuthor,
   parseDate,
@@ -70,7 +70,16 @@ for (const doc of docs) {
     return makeFlowObject(mapped);
   });
 
-  if (author[0] !== undefined) {
+  let skipAuthor = false;
+
+  for (const x of author) {
+    if (x === undefined) {
+      skipAuthor = true;
+      break;
+    }
+  }
+
+  if (!skipAuthor) {
     cite.author = author;
   }
 
@@ -120,7 +129,9 @@ for (const doc of docs) {
 console.log("build/public/N*.yml files have been written");
 
 // Write the index file.
-references.sort((a, b) => a.id.localeCompare(b.id));
+references.sort(
+  (a, b) => extractDocumentNumber(a.id) - extractDocumentNumber(b.id)
+);
 const indexFile = { references };
 fs.writeFileSync("build/public/index.yml", yaml.stringify(indexFile));
 console.log("build/public/index.yml has been written");

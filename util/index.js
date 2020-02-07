@@ -78,3 +78,9 @@ module.exports.parseDate = obj => {
 
   return date;
 };
+
+// Gets #### from N####.
+module.exports.extractDocumentNumber = id => {
+  assert(/^[Nn][0-9]+$/.test(id));
+  return Number.parseInt(id.substring(1), 10);
+};

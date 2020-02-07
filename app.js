@@ -19,13 +19,14 @@ module.exports = app;
 
 app.disable("x-powered-by");
 
-// Override content types to send YAML as plain text. This is less accurate from
-// a technical perspective but it ensures browsers will display the text inline.
-// `Content-Disposition: inline` doesn't always have that effect.
+// Override content types to send YAML and BibTeX as plain text. This is less
+// accurate from a technical perspective but it ensures browsers will display
+// the text inline. `Content-Disposition: inline` doesn't always have that
+// effect.
 //
 // Note that the `mime` instance hanging off of the send package is the global
 // one used by both Express and serve-static so it will change everything.
-require("send").mime.define({ "text/plain": ["yml", "yaml"] }, true);
+require("send").mime.define({ "text/plain": ["yml", "yaml", "bib"] }, true);
 
 // We use both checks in case NODE_ENV is not set because, for example, we only
 // want to show details on error pages when it's "development" but not unknown,
@@ -57,10 +58,10 @@ const makeRenderTemplateError = (tmpl, contentType) => (err, res) => {
     res.locals.message = err.message;
     res.locals.description = err.description;
   } else if (status === 500) {
-    res.locals.message = "internal server error";
+    res.locals.message = "Internal server error";
     res.locals.description = null;
   } else {
-    res.locals.message = "unknown error";
+    res.locals.message = "Unknown error";
     res.locals.description = null;
   }
 
@@ -79,9 +80,9 @@ const makeRenderJsonError = contentType => (err, res) => {
   if (err.expose || isDevelopment) {
     result.error = `${err.message} - ${err.description}`;
   } else if (status === 500) {
-    result.error = "internal server error";
+    result.error = "Internal server error";
   } else {
-    result.error = "unknown error";
+    result.error = "Unknown error";
   }
 
   result.stack = isDevelopment ? err.stack.split("\n") : null;
@@ -100,17 +101,17 @@ const renderJsonError = makeRenderJsonError("application/json");
 const renderYamlError = makeRenderJsonError("text/plain");
 
 const documentNotFoundError = () =>
-  createError(404, "page not found", { expose: true });
+  createError(404, "Page not found", { expose: true });
 
 const unassignedIdError = () =>
-  createError(404, "unassigned document ID", { expose: true });
+  createError(404, "Unassigned document ID", { expose: true });
 
 const missingDocumentLinkError = () =>
-  createError("404", "document file missing", {
+  createError("404", "Document file missing", {
     expose: true,
     description:
-      "the document ID you provided is valid but we do not have a link " +
-      "to the document file. it has probably been lost to the sands of " +
+      "The document ID you provided is valid but we do not have a link " +
+      "to the document file. It has probably been lost to the sands of " +
       "time...",
   });
 
@@ -124,7 +125,7 @@ app.use(express.static(path.join(__dirname, "build", "public")));
 
 // Main redirect route.
 app.get("/:id([a-zA-Z0-9]+)", (req, res, next) => {
-  let id = req.params.toLowerCase();
+  let id = req.params.id.toLowerCase();
 
   // Canonicalize the ID if it looks like a document number.
   if (id.match("^n[0-9]+$")) {
@@ -145,9 +146,11 @@ app.get("/:id([a-zA-Z0-9]+)", (req, res, next) => {
 });
 
 // Metadata route.
-app.get("/:file([Nn][0-9]+.ya?ml)", (req, res, next) => {
-  const [filename] = req.params.file.split(".");
+app.get("/:file([Nn][0-9]+.(bib|ya?ml))", (req, res, next) => {
+  let [filename, ext] = req.params.file.split(".");
   const id = canonicalDocumentId(filename);
+
+  if (ext === "yaml") ext = "yml";
 
   const redirect = redirects[id];
 
@@ -156,7 +159,7 @@ app.get("/:file([Nn][0-9]+.ya?ml)", (req, res, next) => {
   } else if (redirect.status === "unassigned") {
     next(unassignedIdError());
   } else {
-    res.sendFile(path.join(__dirname, "build", "public", `${id}.yml`));
+    res.sendFile(path.join(__dirname, "build", "public", `${id}.${ext}`));
   }
 });
 
