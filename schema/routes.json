@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://wg14.link/schema/routes.json",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "oneOf": [
+      {
+        "additionalProperties": false,
+        "required": ["id", "status"],
+        "properties": {
+          "id":  { "type": "string" },
+          "status": { "type": "string", "enum": ["unassigned"] }
+        }
+      },
+      {
+        "additionalProperties": false,
+        "required": ["id", "title", "author", "date"],
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "mirror": { "type": "string", "format": "uri" },
+          "id":  { "type": "string" },
+          "title":  { "type": "string" },
+          "author":  { "type": "string" },
+          "date":  { "type": "string" },
+          "status": { "type": "string", "enum": ["missing"] }
+        }
+      }
+    ]
+  },
+  "propertyNames": {
+    "pattern": "^[a-zA-Z0-9]+$"
+  }
+}

@@ -71,8 +71,8 @@ const itShouldValidateAgainstSchema = (dataPath, schemaPath) => {
 // reviewed and will definitely cause test failures.
 const lastReviewedDocument = 500;
 
-describe("build/redirect.json", () => {
-  itShouldValidateAgainstSchema("build/redirect.json", "schema/redirect.json");
+describe("build/routes.json", () => {
+  itShouldValidateAgainstSchema("build/routes.json", "schema/routes.json");
 });
 
 describe("data/alias.yml", () => {

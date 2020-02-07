@@ -1,5 +1,5 @@
-console.log("Starting build-redirect-data.js...");
-require("./build-redirect-data");
+console.log("Starting build-route-data.js...");
+require("./build-route-data");
 
 console.log("Starting build-bibtex.js...");
 require("./build-bibtex");
