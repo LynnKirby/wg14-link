@@ -13,9 +13,6 @@ fs.mkdirSync("build/public", { recursive: true });
 const rawAuthors = parseDataFileSync("data/authors.yml");
 const docs = parseDataFileSync("data/documents.yml");
 
-// Lazy deep clone.
-const easyClone = obj => JSON.parse(JSON.stringify(obj));
-
 // Parse author file into CSL JSON.
 const authorMap = {};
 
@@ -41,13 +38,19 @@ for (let id of Object.keys(rawAuthors)) {
   authorMap[id] = parseAuthor(rawAuthors[id]);
 }
 
+const makeFlowObject = obj => {
+  const node = yaml.createNode(obj);
+  node.type = "FLOW_MAP";
+  return node;
+};
+
 // Parse a string or number into a CSL date-parts object.
 const dateRegexp = /^([0-9]{4})(-[0-9]{2})?(-[0-9]{2})?$/;
 
 const parseDate = obj => {
   // If the YAML data file has just the year, it gets parsed as a number.
   if (typeof obj === "number") {
-    return { "date-parts": [[obj]] };
+    return makeFlowObject({ "date-parts": [[obj]] });
   }
 
   assert(typeof obj === "string");
@@ -55,14 +58,14 @@ const parseDate = obj => {
   const parts = [Number.parseInt(match[1], 10)];
 
   if (match[2]) {
-    parts.push(Number.parseInt(match[2], 10));
+    parts.push(Number.parseInt(match[2].substring(1), 10));
   }
 
   if (match[3]) {
-    parts.push(Number.parseInt(match[3], 10));
+    parts.push(Number.parseInt(match[3].substring(1), 10));
   }
 
-  return { "date-parts": [parts] };
+  return makeFlowObject({ "date-parts": [parts] });
 };
 
 const references = [];
@@ -87,7 +90,11 @@ for (const doc of docs) {
   // TODO: Authors should be added unconditionally but not all of the docs
   // have been reviewed and have valid author keys.
   const docAuthors = typeof doc.author === "string" ? [doc.author] : doc.author;
-  const author = docAuthors.map(x => authorMap[x]);
+  const author = docAuthors.map(x => {
+    const mapped = authorMap[x];
+    if (mapped === undefined) return undefined;
+    return makeFlowObject(mapped);
+  });
 
   if (author[0] !== undefined) {
     cite.author = author;
@@ -140,8 +147,6 @@ console.log("build/public/N*.yml files have been written");
 
 // Write the index file.
 references.sort((a, b) => a.id.localeCompare(b.id));
-// The object is deep cloned so that our too-smart yaml package doesn't add
-// anchors and aliases where we've reused objects (e.g. all the names).
-const indexFile = { references: easyClone(references) };
+const indexFile = { references };
 fs.writeFileSync("build/public/index.yml", yaml.stringify(indexFile));
 console.log("build/public/index.yml has been written");
