@@ -59,6 +59,7 @@ for (const doc of docs) {
     "citation-label": id,
     title: doc.title,
     issued,
+    publisher: "WG14",
   };
 
   // TODO: Authors should be added unconditionally but not all of the docs
@@ -83,43 +84,8 @@ for (const doc of docs) {
     cite.author = author;
   }
 
-  // Optional fields.
   if (doc.mirror || doc.url) {
     cite.URL = `https://wg14.link/${id.toLowerCase()}`;
-  }
-
-  if (doc.publisher !== undefined) {
-    cite.publisher = doc.publisher;
-  }
-
-  if (doc.place !== undefined) {
-    cite["publisher-place"] = doc.place;
-  }
-
-  if (doc.journal !== undefined) {
-    cite.type = "article-journal";
-    cite["container-title"] = doc.journal;
-  }
-
-  if (doc.book !== undefined) {
-    cite.type = "chapter";
-    cite["container-title"] = doc.book;
-  }
-
-  if (doc.page !== undefined) {
-    cite.page = `${doc.page}`;
-  }
-
-  if (doc.volume !== undefined) {
-    cite.volume = `${doc.volume}`;
-  }
-
-  if (doc.issue !== undefined) {
-    cite.issue = `${doc.issue}`;
-  }
-
-  if (doc.number !== undefined) {
-    cite.number = `${doc.number}`;
   }
 
   references.push(cite);
