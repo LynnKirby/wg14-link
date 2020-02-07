@@ -53,6 +53,7 @@ const isEmbedBot = ua => {
     "Discordbot",
     "Facebot",
     "Slackbot-LinkExpanding",
+    "TelegramBot",
   ];
 
   if (!ua) return false;
@@ -139,7 +140,7 @@ app.use(express.static(path.join(__dirname, "build", "public")));
 
 // Main route.
 app.get("/:id([a-zA-Z0-9]+)", (req, res, next) => {
-  let id = req.params.id.toLowerCase();
+  let id = req.params.id.toUpperCase();
 
   // Canonicalize the ID if it looks like a document number.
   if (id.match("^n[0-9]+$")) {
