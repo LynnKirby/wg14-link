@@ -57,7 +57,7 @@ const embedBotList = [
   "Discouse Forum Onebox",
 ];
 
-const embedBotRegexp = new RegExp(`(${embedBotList.join("|")})`, "i")
+const embedBotRegexp = new RegExp(`(${embedBotList.join("|")})`, "i");
 
 const isEmbedBot = ua => {
   if (!ua) return false;
