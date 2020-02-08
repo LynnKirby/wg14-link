@@ -3,6 +3,7 @@ const assert = require("assert");
 const execa = require("execa");
 const fs = require("fs-extra");
 const json = require("@stoplight/json");
+const process = require("process");
 const yaml = require("@stoplight/yaml");
 
 const { extractDocumentNumber, report } = require("../util");
@@ -294,4 +295,8 @@ const main = async () => {
   authorsShouldBeAccountedFor(authors, documents);
 };
 
-main();
+main().catch(e => {
+  report("validate-data.js", "Uncaught exception!\n");
+  console.log(e);
+  process.exit(1);
+});
