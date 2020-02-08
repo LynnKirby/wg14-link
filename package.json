@@ -6,19 +6,19 @@
     "start": "cross-env DEBUG=wg14-link:* node scripts/start-server.js",
     "dev": "cross-env NODE_ENV=development npm start",
     "build": "node scripts/build-all.js",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "ajv": "^6.11.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-jest": "^23.6.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "jest": "^25.1.0",
     "jest-github-actions-reporter": "^1.0.2",
     "jest-json-schema": "^2.1.0",
-    "jest-runner-eslint": "^0.7.6",
-    "jest-runner-prettier": "^0.3.6",
-    "prettier": "^1.19.1"
+    "prettier": "1.19.1"
   },
   "dependencies": {
     "cross-env": "^7.0.0",
