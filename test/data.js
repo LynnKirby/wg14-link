@@ -130,8 +130,3 @@ describe("data/documents.yml", () => {
     expect(Array.from(allAuthors).sort()).toEqual(Object.keys(authors).sort());
   });
 });
-
-it("will fail", () => {
-expect(true).toBe(false);
-      // bad formatting
-});
