@@ -1,0 +1,16 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "unix",
+      "pattern": [
+        {
+          "regexp": "^((\\w:(\\\\|\\/))?[^:]+):(\\d+):(\\d+): (.*)$",
+          "file": 1,
+          "line": 4,
+          "column": 5,
+          "message": 6
+        }
+      ]
+    }
+  ]
+}

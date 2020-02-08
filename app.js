@@ -1,10 +1,11 @@
-const { canonicalDocumentId } = require("./util");
 const createError = require("http-errors");
 const debug = require("debug")("wg14-link:app");
 const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
 const process = require("process");
+
+const { canonicalDocumentId } = require("./util");
 
 // Load data.
 const routes = require("./build/routes.json");

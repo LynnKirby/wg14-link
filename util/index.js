@@ -1,6 +1,10 @@
 const assert = require("assert");
 const fs = require("fs-extra");
-const yaml = require("yaml");
+const yaml = require("@stoplight/yaml");
+
+//
+// Data file utilities.
+//
 
 // Canonicalize document ID.
 module.exports.canonicalDocumentId = id => {
@@ -22,34 +26,6 @@ module.exports.canonicalDocumentId = id => {
     // N001-N009
     return "N00" + n;
   }
-};
-
-// Slurp a JSON or YAML file.
-module.exports.parseDataFile = async filename => {
-  if (filename.endsWith(".json")) {
-    return await fs.readJson(filename);
-  }
-
-  if (filename.endsWith(".yml") || filename.endsWith(".yaml")) {
-    const file = await fs.readFile(filename, { encoding: "utf8" });
-    return yaml.parse(file, { schema: "failsafe" });
-  }
-
-  throw new Error(`Unknown data file type of ${filename}.`);
-};
-
-// Slurp a JSON or YAML file synchronously.
-module.exports.parseDataFileSync = filename => {
-  if (filename.endsWith(".json")) {
-    return fs.readJsonSync(filename);
-  }
-
-  if (filename.endsWith(".yml") || filename.endsWith(".yaml")) {
-    const file = fs.readFileSync(filename, "utf8");
-    return yaml.parse(file, { schema: "failsafe" });
-  }
-
-  throw new Error(`Unknown data file type of ${filename}.`);
 };
 
 // Parses the author format in data/authors.yml.
@@ -96,4 +72,57 @@ module.exports.parseDate = obj => {
 module.exports.extractDocumentNumber = id => {
   assert(/^[Nn][0-9]+$/.test(id));
   return Number.parseInt(id.substring(1), 10);
+};
+
+//
+// CLI utilities.
+//
+
+// Report an error or other CLI message.
+module.exports.report = (file, message, line, column) => {
+  assert(file);
+  assert(message);
+
+  if (column === undefined) {
+    if (line === undefined) {
+      console.log(`${file}: ${message}`);
+    } else {
+      console.log(`${file}:${line}: ${message}`);
+    }
+  } else {
+    assert(line !== undefined);
+    console.log(`${file}:${line}:${column}: ${message}`);
+  }
+};
+
+//
+// IO utilities.
+//
+
+// Slurp a JSON or YAML file.
+module.exports.parseDataFile = async filename => {
+  if (filename.endsWith(".json")) {
+    return await fs.readJson(filename);
+  }
+
+  if (filename.endsWith(".yml") || filename.endsWith(".yaml")) {
+    const file = await fs.readFile(filename, { encoding: "utf8" });
+    return yaml.parse(file);
+  }
+
+  throw new Error(`Unknown data file type of ${filename}.`);
+};
+
+// Slurp a JSON or YAML file synchronously.
+module.exports.parseDataFileSync = filename => {
+  if (filename.endsWith(".json")) {
+    return fs.readJsonSync(filename);
+  }
+
+  if (filename.endsWith(".yml") || filename.endsWith(".yaml")) {
+    const file = fs.readFileSync(filename, "utf8");
+    return yaml.parse(file);
+  }
+
+  throw new Error(`Unknown data file type of ${filename}.`);
 };

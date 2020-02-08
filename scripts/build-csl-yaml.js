@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
-const yaml = require("yaml");
+const yaml = require("@stoplight/yaml");
 
 const {
   canonicalDocumentId,
@@ -14,20 +14,13 @@ const {
 // Make things easy by always operating from the project root directory.
 process.chdir(path.join(__dirname, "../"));
 
-// Converts an object into a YAML flow-style map.
-const makeFlowObject = obj => {
-  const node = yaml.createNode(obj);
-  node.type = "FLOW_MAP";
-  return node;
-};
-
 // Convert a year number or YYYY-MM-DD string to CSL JSON date-parts.
 const parseDateAsCsl = date => {
   const { year, month, day } = parseDate(date);
   const parts = [year];
   if (month !== undefined) parts.push(month);
   if (day !== undefined) parts.push(day);
-  return makeFlowObject({ "date-parts": [parts] });
+  return { "date-parts": [parts] };
 };
 
 // Prepare data.
@@ -65,10 +58,11 @@ for (const doc of docs) {
   // TODO: Authors should be added unconditionally but not all of the docs
   // have been reviewed and have valid author keys.
   const docAuthors = typeof doc.author === "string" ? [doc.author] : doc.author;
+
   const author = docAuthors.map(x => {
     const mapped = authorMap[x];
     if (mapped === undefined) return undefined;
-    return makeFlowObject(mapped);
+    return mapped;
   });
 
   let skipAuthor = false;
@@ -89,7 +83,11 @@ for (const doc of docs) {
   }
 
   references.push(cite);
-  fs.writeFileSync(`build/public/${id}.yml`, yaml.stringify(cite));
+
+  fs.writeFileSync(
+    `build/public/${id}.yml`,
+    yaml.safeStringify(cite, { flowLevel: 2 })
+  );
 }
 
 console.log("build/public/N*.yml files have been written");
@@ -98,6 +96,9 @@ console.log("build/public/N*.yml files have been written");
 references.sort(
   (a, b) => extractDocumentNumber(a.id) - extractDocumentNumber(b.id)
 );
-const indexFile = { references };
-fs.writeFileSync("build/public/index.yml", yaml.stringify(indexFile));
+const indexFile = { references: JSON.parse(JSON.stringify(references)) };
+fs.writeFileSync(
+  "build/public/index.yml",
+  yaml.safeStringify(indexFile, { flowLevel: 4 })
+);
 console.log("build/public/index.yml has been written");

@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - run: echo "::add-matcher::.github/unix-problem-matcher.json"
     - run: sudo apt-get -y install pandoc-citeproc
     - run: npm ci
     - run: npm run build -s
     - run: npm run validate -s
-    - run: npm run test -s -- --reporters=default --reporters=jest-github-actions-reporter
   lint:
     name: Lint
     runs-on: ubuntu-latest
