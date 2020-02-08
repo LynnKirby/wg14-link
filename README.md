@@ -1,6 +1,6 @@
 # wg14.link
 
-[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/LynnKirby/wg14-link/Continuous%20Integration/master?style=flat-square)](https://github.com/LynnKirby/wg14-link/actions?query=workflow%3A%22Continuous+Integration%22+branch%3Amaster)
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/LynnKirby/wg14-link/CI/master?style=flat-square)](https://github.com/LynnKirby/wg14-link/actions?query=workflow%3A%22CI%22+branch%3Amaster)
 [![License: CC0-1.0](https://img.shields.io/badge/license-CC0--1.0-blue?style=flat-square)](./COPYING.txt)
 
 This is the source code for [wg14.link], an unofficial ISO C (WG14) redirect
