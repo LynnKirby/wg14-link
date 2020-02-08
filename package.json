@@ -14,6 +14,7 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-jest": "^23.6.0",
     "jest": "^25.1.0",
+    "jest-github-actions-reporter": "^1.0.2",
     "jest-json-schema": "^2.1.0",
     "jest-runner-eslint": "^0.7.6",
     "jest-runner-prettier": "^0.3.6",

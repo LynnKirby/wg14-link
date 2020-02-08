@@ -14,4 +14,4 @@ jobs:
     - uses: actions/checkout@v2
     - run: npm ci
     - run: npm run build -s
-    - run: npm run test -s
+    - run: npm run test -s -- --reporters=default --reporters=jest-github-actions-reporter
