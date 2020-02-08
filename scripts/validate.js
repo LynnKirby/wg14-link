@@ -294,7 +294,4 @@ const main = async () => {
   authorsShouldBeAccountedFor(authors, documents);
 };
 
-main().catch(e => {
-  report("validate-data.js", "Uncaught exception!\n");
-  console.log(e);
-});
+main();
