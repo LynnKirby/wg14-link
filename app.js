@@ -47,22 +47,21 @@ if (isProduction) {
   app.use(morgan("dev"));
 }
 
+const embedBotList = [
+  "Twitterbot",
+  "Discordbot",
+  "Facebot",
+  "facebookexternalhit",
+  "Slackbot-LinkExpanding",
+  "TelegramBot",
+  "Discouse Forum Onebox",
+];
+
+const embedBotRegexp = new RegExp(`(${embedBotList.join("|")})`, "i")
+
 const isEmbedBot = ua => {
-  const patterns = [
-    "Twitterbot",
-    "Discordbot",
-    "Facebot",
-    "Slackbot-LinkExpanding",
-    "TelegramBot",
-  ];
-
   if (!ua) return false;
-
-  for (const p of patterns) {
-    if (ua.includes(p)) return true;
-  }
-
-  return false;
+  return embedBotRegexp.test(ua);
 };
 
 //
