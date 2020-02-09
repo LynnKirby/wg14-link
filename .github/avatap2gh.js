@@ -1,3 +1,8 @@
+// usage: ava --tap | node avatap2gh.js
+//
+// Converts TAP output from AVA into commands understood by the GitHub CI
+// runner. It adds annotations to, for example, pull requests on test failure.
+
 const Parser = require("tap-parser");
 const process = require("process");
 
