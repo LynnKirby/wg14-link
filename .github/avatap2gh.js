@@ -31,7 +31,7 @@ p.on("fail", assert => {
   if (assert.diag.values) {
     const valuesMessage = Object.entries(assert.diag.values)
       .map(x => {
-        return `${x[0]}:\n${x[1]}`;
+        return `${x[0]}\n${x[1]}`;
       })
       .join("\n\n");
     message = `${assert.name}\n\n${valuesMessage}`;
