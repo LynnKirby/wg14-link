@@ -19,6 +19,7 @@ jobs:
     - run: npm ci
     - run: npm run build -s
     - run: npm run validate -s
+    - run: npm run test -s
   lint:
     name: Lint
     runs-on: ubuntu-latest

@@ -1,6 +1,6 @@
 {
-  "plugins": ["jest", "prettier"],
-  "extends": ["eslint:recommended", "plugin:jest/recommended", "prettier"],
+  "plugins": ["prettier"],
+  "extends": ["eslint:recommended", "prettier"],
   "parserOptions": {
     "ecmaVersion": 2017
   },
@@ -10,5 +10,11 @@
   },
   "rules": {
     "prettier/prettier": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["test/*.js"],
+      "extends": ["plugin:ava/recommended"]
+    }
+  ]
 }

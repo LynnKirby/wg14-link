@@ -39,11 +39,14 @@ app.set("views", "./views");
 app.set("view engine", "ejs");
 
 // Log errors to stdout. Use the standard Apache combined log output for
-// production and a concise colored output for development.
-if (isProduction) {
-  app.use(morgan("combined"));
-} else {
-  app.use(morgan("dev"));
+// production and a concise colored output for development. Disable logging
+// when we're testing, because it's not useful.
+if (!process.env.TESTING) {
+  if (isProduction) {
+    app.use(morgan("combined"));
+  } else {
+    app.use(morgan("dev"));
+  }
 }
 
 const embedBotList = [
@@ -124,7 +127,7 @@ const unassignedIdError = () =>
   createError(404, "Unassigned document ID", { expose: true });
 
 const missingDocumentLinkError = () =>
-  createError("404", "Document file missing", {
+  createError(404, "Document file missing", {
     expose: true,
     description:
       "The document ID you provided is valid but we do not have a link " +
@@ -166,7 +169,7 @@ app.get("/:id([a-zA-Z0-9]+)", (req, res, next) => {
       res.locals.date = route.date;
       res.render("bot-embed");
     } else {
-      res.redirect(303, route.mirror || route.url);
+      res.redirect(302, route.mirror || route.url);
     }
   }
 });
