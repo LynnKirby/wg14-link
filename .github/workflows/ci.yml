@@ -19,7 +19,7 @@ jobs:
     - run: npm ci
     - run: npm run build -s
     - run: npm run validate -s
-    - run: npm run test -s
+    - run: npm run test -s -- -tap | node .github/avatap2gh.js
   lint:
     name: Lint
     runs-on: ubuntu-latest
